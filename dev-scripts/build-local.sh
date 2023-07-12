@@ -6,6 +6,9 @@
 set -eo pipefail
 set -x
 
+VERSION=$1
+GIT_COMMIT=$2
+
 SCRIPT_DIR="$(cd "$(dirname "$0")"; pwd)"
 
 TARGET_OS="${TARGET_OS:-linux}"
@@ -36,7 +39,7 @@ DEFAULT_VALUES="{\"rke-version\":\"${RKE_VERSION}\"}"
 
 RANCHER_BINARY="${SCRIPT_DIR}/../bin/rancher"
 GOOS="${TARGET_OS}" GOARCH="${TARGET_ARCH}" CGO_ENABLED=0 "${GO_BINARY}" build -tags k8s \
-    -ldflags "-X github.com/rancher/rancher/pkg/version.Version=dev -X github.com/rancher/rancher/pkg/version.GitCommit=dev -X github.com/rancher/rancher/pkg/settings.InjectDefaults=$DEFAULT_VALUES -extldflags -static -s" \
+    -ldflags "-X github.com/rancher/rancher/pkg/version.Version=$VERSION -X github.com/rancher/rancher/pkg/version.GitCommit=$GIT_COMMIT -X github.com/rancher/rancher/pkg/settings.InjectDefaults=$DEFAULT_VALUES -extldflags -static -s" \
     -o "${RANCHER_BINARY}"
 
 DATA_JSON_FILE="${SCRIPT_DIR}/../bin/data.json"
