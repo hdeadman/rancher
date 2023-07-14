@@ -150,6 +150,9 @@ func (p *ldapProvider) SearchPrincipals(searchKey, principalType string, myToken
 		logrus.Warnf("ldap search principals failed to connect to ldap: %s\n", err)
 		return principals, nil
 	}
+	if logrus.IsLevelEnabled(logrus.TraceLevel) {
+		lConn.Debug = true
+	}
 	defer lConn.Close()
 
 	principals, err = p.searchPrincipals(searchKey, principalType, config, lConn)
@@ -316,6 +319,9 @@ func (p *ldapProvider) samlSearchGetPrincipal(
 		return nil, err
 	}
 	defer lConn.Close()
+	if logrus.IsLevelEnabled(logrus.TraceLevel) {
+		lConn.Debug = true
+	}
 
 	err = ldap.AuthenticateServiceAccountUser(
 		config.ServiceAccountPassword, config.ServiceAccountDistinguishedName, "", lConn)
