@@ -168,6 +168,8 @@ func (p *ldapProvider) SearchPrincipals(searchKey, principalType string, myToken
 				}
 			}
 		}
+	} else {
+		logrus.Warnf("ldap search principals returned error: %s\n", err)
 	}
 
 	return principals, nil
