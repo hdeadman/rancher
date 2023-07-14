@@ -257,8 +257,15 @@ func (s *Provider) RefetchGroupPrincipals(principalID string, secret string) ([]
 }
 
 func (s *Provider) SearchPrincipals(searchKey, principalType string, token v3.Token) ([]v3.Principal, error) {
+	logrus.Debugf("SAML [SearchPrincipals]: searchKey [%s] principalType [%s] token [%s]",
+		searchKey, principalType, token.Name)
 	if s.hasLdapGroupSearch() {
+		logrus.Debugf("SAML [SearchPrincipals]: searching LDAP")
 		principals, err := s.ldapProvider.SearchPrincipals(searchKey, principalType, token)
+		logrus.Debugf("SAML [SearchPrincipals]: searching LDAP")
+		if err != nil {
+			logrus.Debugf("SAML [SearchPrincipals]: searching LDAP error is [%s]", err.Error())
+		}
 		// only give response from ldap if it's configured
 		if !ldap.IsNotConfigured(err) {
 			return principals, err
@@ -330,6 +337,8 @@ func (s *Provider) CanAccessWithGroupProviders(userPrincipalID string, groupPrin
 		logrus.Errorf("Error fetching saml config: %v", err)
 		return false, err
 	}
+	logrus.Debugf("SAML [CanAccessWithGroupProviders]: checking access with access mode %s and userPrincipalID %s",
+		config.AccessMode, userPrincipalID)
 	allowed, err := s.userMGR.CheckAccess(config.AccessMode, config.AllowedPrincipalIDs, userPrincipalID, groupPrincipals)
 	if err != nil {
 		return false, err

@@ -200,12 +200,16 @@ func (m *userManager) CheckAccess(accessMode string, allowedPrincipalIDs []strin
 		}
 
 		for _, p := range userPrincipals {
+			logrus.Debugf("User Manager [CheckAccess] users allowed=[%s] value=[%s]",
+				strings.Join(allowedPrincipalIDs, ","), p)
 			if slice.ContainsString(allowedPrincipalIDs, p) {
 				return true, nil
 			}
 		}
 
 		for _, g := range groups {
+			logrus.Debugf("User Manager [CheckAccess] groups allowed=[%s] value=[%s]",
+				strings.Join(allowedPrincipalIDs, ","), g)
 			if slice.ContainsString(allowedPrincipalIDs, g.Name) {
 				return true, nil
 			}
