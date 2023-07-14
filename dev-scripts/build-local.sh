@@ -6,8 +6,8 @@
 set -eo pipefail
 set -x
 
-VERSION=$1
-GIT_COMMIT=$2
+VERSION=${1:-2.7.5}
+GIT_COMMIT=${2:-asdfasdf}
 
 SCRIPT_DIR="$(cd "$(dirname "$0")"; pwd)"
 

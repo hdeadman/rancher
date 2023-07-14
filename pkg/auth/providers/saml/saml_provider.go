@@ -296,6 +296,8 @@ func (s *Provider) GetPrincipal(principalID string, token v3.Token) (v3.Principa
 
 	if s.hasLdapGroupSearch() {
 		p, err := s.ldapProvider.GetPrincipal(principalID, token)
+		logrus.Debugf("SAML [GetPrincipal]: LDAP Provider returned principal: [%s] display name: [%s]",
+			p.LoginName, p.DisplayName)
 		// only give response from ldap if it's configured
 		if !ldap.IsNotConfigured(err) {
 			return p, err
@@ -310,6 +312,8 @@ func (s *Provider) GetPrincipal(principalID string, token v3.Token) (v3.Principa
 	}
 
 	p = s.toPrincipal(principalType, p, &token)
+	logrus.Debugf("SAML [GetPrincipal]: toPrincipal: [%s] display name: [%s] principal type: [%s]",
+		p.LoginName, p.DisplayName, p.PrincipalType)
 	return p, nil
 }
 
